@@ -10,7 +10,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/hsounaSellami/lastdev.git', branch: 'main'
+                git url: 'https://github.com/hsounaSellami/pipetest2.git', branch: 'main'
             }
         }
 
