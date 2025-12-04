@@ -14,11 +14,22 @@ pipeline {
             }
         }
 
-        stage('Build Maven') {
-            steps {
-                sh 'mvn clean package -DskipTests=false jacoco:report'
-            }
-        }
+         stage('Build & Test') {
+                    steps {
+                        sh 'mvn clean test jacoco:report'
+                    }
+                    post {
+                        always {
+                            junit 'target/surefire-reports/*.xml'
+                            publishHTML([allowMissing: false,
+                                         alwaysLinkToLastBuild: true,
+                                         keepAll: true,
+                                         reportDir: 'target/site/jacoco',
+                                         reportFiles: 'index.html',
+                                         reportName: 'JaCoCo Coverage Report'])
+                        }
+                    }
+                }
 
 
 
@@ -44,8 +55,8 @@ pipeline {
     }
     post {
             always {
-                // Archive Jacoco coverage report
-                jacoco execPattern: '**/target/jacoco.exec', classPattern: '**/target/classes', sourcePattern: '**/src/main/java', exclusionPattern: ''
+
+                echo 'Pipeline finished.'
             }
             success {
                 echo 'Pipeline finished successfully!'
