@@ -14,22 +14,31 @@ pipeline {
             }
         }
 
-         stage('Build & Test') {
-                    steps {
-                        sh 'mvn clean test jacoco:report'
-                    }
-                    post {
-                        always {
-                            junit 'target/surefire-reports/*.xml'
-                            publishHTML([allowMissing: false,
-                                         alwaysLinkToLastBuild: true,
-                                         keepAll: true,
-                                         reportDir: 'target/site/jacoco',
-                                         reportFiles: 'index.html',
-                                         reportName: 'JaCoCo Coverage Report'])
-                        }
-                    }
-                }
+          stage('Build & Test') {
+                     steps {
+                         sh 'mvn clean test jacoco:report'
+                     }
+                     post {
+                         always {
+                             junit 'target/surefire-reports/*.xml'
+                             publishHTML([
+                                 allowMissing: false,
+                                 alwaysLinkToLastBuild: true,
+                                 keepAll: true,
+                                 reportDir: 'target/site/jacoco',
+                                 reportFiles: 'index.html',
+                                 reportName: 'JaCoCo Coverage Report'
+                             ])
+                         }
+                     }
+                 }
+
+                 stage('Package JAR') {
+                     steps {
+                         sh 'mvn package -DskipTests'
+                         sh 'ls -l target'   // DEBUG: show JAR file
+                     }
+                 }
 
 
 
@@ -55,14 +64,7 @@ pipeline {
     }
     post {
             always {
-
                 echo 'Pipeline finished.'
-            }
-            success {
-                echo 'Pipeline finished successfully!'
-            }
-            failure {
-                echo 'Pipeline failed. Check the console output not a lose.'
             }
         }
 }
