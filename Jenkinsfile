@@ -62,7 +62,7 @@ pipeline {
                 echo 'Pipeline finished successfully!'
             }
             failure {
-                echo 'Pipeline failed. Check the console output.'
+                echo 'Pipeline failed. Check the console output lose.'
             }
         }
 }
