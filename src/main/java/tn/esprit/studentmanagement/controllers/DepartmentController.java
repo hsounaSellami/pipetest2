@@ -8,6 +8,7 @@ import tn.esprit.studentmanagement.services.DepartmentService;
 import tn.esprit.studentmanagement.services.IDepartmentService;
 
 import java.util.List;
+
 /*hello mf 22 2222*/
 @RestController
 @RequestMapping("/Depatment")
@@ -15,6 +16,8 @@ import java.util.List;
 @AllArgsConstructor
 public class DepartmentController {
     private IDepartmentService departmentService;
+
+    /* hello */
 
     @GetMapping("/getAllDepartment")
     public List<Department> getAllDepartment() {
@@ -36,7 +39,7 @@ public class DepartmentController {
         return departmentService.saveDepartment(department);
     }
 
-    /* hello 5*/
+    /* hello 5 */
     @DeleteMapping("/deleteDepartment/{id}")
     public void deleteDepartment(@PathVariable Long id) {
         departmentService.deleteDepartment(id);
