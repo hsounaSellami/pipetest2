@@ -16,28 +16,11 @@ pipeline {
 
         stage('Build Maven') {
             steps {
-                sh 'mvn clean package -DskipTests=false'
+                sh 'mvn clean package -DskipTests=false jacoco:report'
             }
         }
 
-        stage('Run Unit Tests & Generate Jacoco Report') {
-                    steps {
-                        sh 'mvn test jacoco:report'
-                    }
-                    post {
-                        always {
-                            // Archive test results
-                            junit 'target/surefire-reports/*.xml'
-                            // Archive JaCoCo report
-                            publishHTML([allowMissing: false,
-                                         alwaysLinkToLastBuild: true,
-                                         keepAll: true,
-                                         reportDir: 'target/site/jacoco',
-                                         reportFiles: 'index.html',
-                                         reportName: 'JaCoCo Coverage Report'])
-                        }
-                    }
-                }
+
 
         stage('Build Docker Image') {
             steps {
@@ -59,4 +42,16 @@ pipeline {
             }
         }
     }
+    post {
+            always {
+                // Archive Jacoco coverage report
+                jacoco execPattern: '**/target/jacoco.exec', classPattern: '**/target/classes', sourcePattern: '**/src/main/java', exclusionPattern: ''
+            }
+            success {
+                echo 'Pipeline finished successfully!'
+            }
+            failure {
+                echo 'Pipeline failed. Check the console output.'
+            }
+        }
 }
