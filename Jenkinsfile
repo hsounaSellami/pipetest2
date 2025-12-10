@@ -61,6 +61,15 @@ pipeline {
                 sh "docker push ${DOCKER_IMAGE}"
             }
         }
+        stage('Deploy to Kubernetes') {
+    steps {
+        sh """
+            kubectl apply -f k8s/mysql-deployment.yaml -n devops
+            kubectl apply -f k8s/spring-deployment.yaml -n devops
+        """
+    }
+}
+
     }
     post {
             always {
