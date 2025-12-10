@@ -15,8 +15,7 @@ metadata:
 type: Opaque
 data:
   SPRING_DATASOURCE_USERNAME: cm9vdA== # base64("root")
-  SPRING_DATASOURCE_PASSWORD: "" # mot de passe vide → base64("") = "" (chaîne vide)
-
+  SPRING_DATASOURCE_PASSWORD: cm9vdHB3ZA== # base64("rootpwd")
 ---
 apiVersion: apps/v1
 kind: Deployment
