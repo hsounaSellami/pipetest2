@@ -44,7 +44,7 @@ spec:
           image: mysql:8
           env:
             - name: MYSQL_ROOT_PASSWORD
-              value: "" # Mot de passe vide
+              value: "rootpwd"
             - name: MYSQL_DATABASE
               value: "studentdb"
           ports:
