@@ -39,7 +39,17 @@ pipeline {
                          sh 'ls -l target'   // DEBUG: show JAR file
                      }
                  }
-
+            stage('MVN SONARQUBE') {
+            steps {
+                withCredentials([string(credentialsId: 'sonarQ', variable: 'SONAR_TOKEN')]) {
+                    sh """
+                        mvn sonar:sonar \
+                          -Dsonar.login=$SONAR_TOKEN \
+                          -Dsonar.host.url=http://localhost:9000/
+                    """
+                }
+            }
+        }
 
 
         stage('Build Docker Image') {
