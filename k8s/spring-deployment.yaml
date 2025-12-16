@@ -13,9 +13,14 @@ spec:
       labels:
         app: student-management
     spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox:1.35
+          command: ['sh', '-c', 'until nc -z mysql-service 3306; do echo "Waiting for MySQL..."; sleep 3; done; echo "MySQL is ready!"']
       containers:
         - name: student-management
           image: hsounasellami/student-management:1.0.0
+          imagePullPolicy: Always
           ports:
             - containerPort: 8089
           envFrom:
@@ -23,6 +28,13 @@ spec:
                 name: spring-config
             - secretRef:
                 name: spring-secret
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
