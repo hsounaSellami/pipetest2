@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/student-management-0.0.1-SNAPSHOT.jar app.jar
 
 # 4️⃣ Exposer un port si nécessaire
-EXPOSE 8080
+EXPOSE 8089
 
 
 

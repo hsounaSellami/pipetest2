@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "hsounasellami/student-management:1.0.0"
+        DOCKER_IMAGE = "hsounasellami/student-management:1.0.1"
         REGISTRY_CREDENTIALS = 'dockertoken'
     }
 
