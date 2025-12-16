@@ -5,12 +5,11 @@ metadata:
   namespace: devops
 spec:
   capacity:
-    storage: 2Gi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data/mysql"
-
+    path: /data/mysql
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -22,8 +21,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
-
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -31,6 +29,7 @@ metadata:
   name: mysql
   namespace: devops
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: mysql
@@ -43,12 +42,10 @@ spec:
         - name: mysql
           image: mysql:8
           env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: "rootpwd"
             - name: MYSQL_DATABASE
-              value: "studentdb"
-            - name: MYSQL_ROOT_HOST
-              value: "%"
+              value: studentdb
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
           ports:
             - containerPort: 3306
           volumeMounts:
@@ -58,7 +55,6 @@ spec:
         - name: mysql-storage
           persistentVolumeClaim:
             claimName: mysql-pvc
-
 ---
 apiVersion: v1
 kind: Service
@@ -66,9 +62,8 @@ metadata:
   name: mysql-service
   namespace: devops
 spec:
+  type: ClusterIP
   selector:
     app: mysql
   ports:
     - port: 3306
-      targetPort: 3306
-  type: ClusterIP

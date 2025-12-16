@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "hsounasellami/student-management:1.0.1"
+        DOCKER_IMAGE = "hsounasellami/student-management:1.0.0"
         REGISTRY_CREDENTIALS = 'dockertoken'
     }
 
@@ -72,13 +72,15 @@ pipeline {
             }
         }
         stage('Deploy to Kubernetes') {
-    steps {
-        sh """
-            kubectl apply -f k8s/mysql-deployment.yaml -n devops
-            kubectl apply -f k8s/spring-deployment.yaml -n devops
-        """
-    }
-}
+                    steps {
+                        sh '''
+                          kubectl apply -f k8s/mysql-deployment.yaml
+                          kubectl apply -f k8s/spring-configmap.yaml
+                          kubectl apply -f k8s/spring-secret.yaml
+                          kubectl apply -f k8s/spring-deployment.yaml
+                        '''
+                    }
+                }
 
     }
     post {
