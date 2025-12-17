@@ -72,13 +72,13 @@ pipeline {
             }
         }
         stage('Deploy to Kubernetes') {
-                    steps {
-                        sh '''
-                        kubectl apply --validate=false -f k8s/namespace.yaml
-                        kubectl apply --validate=false -f k8s/mysql.yaml
-                        kubectl apply --validate=false -f k8s/spring.yaml
-                        '''
-                    }
+            steps {
+                sh '''
+                kubectl --insecure-skip-tls-verify=true apply -f k8s/namespace.yaml
+                kubectl --insecure-skip-tls-verify=true apply -f k8s/mysql.yaml
+                kubectl --insecure-skip-tls-verify=true apply -f k8s/spring.yaml
+                '''
+            }
         }
 
     }
