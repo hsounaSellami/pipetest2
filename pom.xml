@@ -124,12 +124,12 @@
     <distributionManagement>
         <repository>
             <id>maven-releasess</id>
-            <url>http://localhost:8081/repository/maven-releasess/</url>
+            <url>http://192.168.33.10:8081/repository/maven-releasess/</url>
         </repository>
 
         <snapshotRepository>
             <id>maven-snapshotss</id>
-            <url>http://localhost:8081/repository/maven-snapshotss/</url>
+            <url>http://192.168.33.10:8081/repository/maven-snapshotss/</url>
         </snapshotRepository>
     </distributionManagement>
 
