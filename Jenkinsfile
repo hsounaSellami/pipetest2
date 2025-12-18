@@ -15,9 +15,11 @@ pipeline {
         }
 
           stage('Build & Test') {
-                     steps {
-                         sh 'mvn clean test jacoco:report'
-                     }
+                      steps {
+                             withMaven(mavenSettingsConfig: 'global-maven-settings') {
+                                 sh 'mvn clean test jacoco:report'
+                             }
+                         }
                      post {
                          always {
                              junit 'target/surefire-reports/*.xml'
@@ -35,21 +37,33 @@ pipeline {
 
                  stage('Package JAR') {
                      steps {
-                         sh 'mvn package -DskipTests'
-                         sh 'ls -l target'   // DEBUG: show JAR file
+                         withMaven(mavenSettingsConfig: 'global-maven-settings') {
+                             sh 'mvn package -DskipTests'
+                         }
+                         sh 'ls -l target'
                      }
                  }
-            stage('MVN SONARQUBE') {
-            steps {
-                withCredentials([string(credentialsId: 'sonarQ', variable: 'SONAR_TOKEN')]) {
-                    sh """
-                        mvn sonar:sonar \
-                          -Dsonar.login=$SONAR_TOKEN \
-                          -Dsonar.host.url=http://localhost:9000/
-                    """
-                }
-            }
-        }
+                 stage('Publish to Nexus') {
+                     steps {
+                         withMaven(mavenSettingsConfig: 'global-maven-settings') {
+                             sh 'mvn deploy -DskipTests'
+                         }
+                     }
+                 }
+           stage('MVN SONARQUBE') {
+               steps {
+                   withMaven(mavenSettingsConfig: 'global-maven-settings') {
+                       withCredentials([string(credentialsId: 'sonarQ', variable: 'SONAR_TOKEN')]) {
+                           sh """
+                             mvn sonar:sonar \
+                               -Dsonar.login=$SONAR_TOKEN \
+                               -Dsonar.host.url=http://localhost:9000/
+                           """
+                       }
+                   }
+               }
+           }
+
 
 
         stage('Build Docker Image') {
